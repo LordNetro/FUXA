@@ -1,0 +1,43 @@
+.tag-browser-content {
+    min-width: 500px;
+    min-height: 300px;
+}
+
+.tag-browser-layout {
+    display: flex;
+    gap: 16px;
+}
+
+.device-list {
+    width: 200px;
+    border-right: 1px solid var(--formSeparatorColor);
+    padding-right: 16px;
+}
+
+.device-list h4 {
+    margin: 0 0 8px 0;
+    color: var(--headerColor);
+}
+
+.tag-list {
+    flex: 1;
+}
+
+.tag-list h4 {
+    margin: 0 0 8px 0;
+    color: var(--headerColor);
+}
+
+.tag-filter {
+    width: 100%;
+    padding: 4px 6px;
+    background-color: var(--formInputBackground);
+    color: var(--formInputColor);
+    border: 1px solid var(--formBorder);
+    border-radius: 2px;
+}
+
+mat-selection-list {
+    max-height: 300px;
+    overflow-y: auto;
+}

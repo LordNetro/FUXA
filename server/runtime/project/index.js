@@ -679,6 +679,47 @@ function removeArMarker(marker) {
 }
 
 /**
+ * Set or add if not exist (check with marker.id) the AR marker in Project
+ * @param {*} marker
+ */
+function setArMarker(marker) {
+    if (!data.ar) {
+        data.ar = { enabled: false, markers: [] };
+    }
+    if (!data.ar.markers) {
+        data.ar.markers = [];
+    }
+    data.ar.enabled = true;
+    var pos = -1;
+    for (var i = 0; i < data.ar.markers.length; i++) {
+        if (data.ar.markers[i].id === marker.id) {
+            pos = i;
+        }
+    }
+    if (pos >= 0) {
+        data.ar.markers[pos] = marker;
+    } else {
+        data.ar.markers.push(marker);
+    }
+}
+
+/**
+ * Remove the AR marker from Project
+ * @param {*} marker
+ */
+function removeArMarker(marker) {
+    if (data.ar && data.ar.markers) {
+        for (var i = 0; i < data.ar.markers.length; i++) {
+            if (data.ar.markers[i].id === marker.id) {
+                data.ar.markers.splice(i, 1);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+/**
  * Get the project data in accordance with autorization
  */
 function getProject(userId, userPermission) {
@@ -976,6 +1017,28 @@ function getMapsLocations() {
             }
         }).catch(function (err) {
             logger.error(`project.prjstorage.get-mapsLocations failed! '${prjstorage.TableType.LOCATIONS} ${err}'`);
+            reject(err);
+        });
+    });
+}
+
+/**
+ * Get the AR markers
+ */
+function getArMarkers() {
+    return new Promise(function (resolve, reject) {
+        prjstorage.getSection(prjstorage.TableType.ARMARKERS).then(drows => {
+            if (drows.length > 0) {
+                var markers = [];
+                for (var id = 0; id < drows.length; id++) {
+                    markers.push(JSON.parse(drows[id].value));
+                }
+                resolve(markers);
+            } else {
+                resolve();
+            }
+        }).catch(function (err) {
+            logger.error(`project.prjstorage.get-arMarkers failed! '${prjstorage.TableType.ARMARKERS} ${err}'`);
             reject(err);
         });
     });

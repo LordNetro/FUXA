@@ -23,6 +23,7 @@ import { ApiKeysListComponent } from './apikeys/api-keys-list/api-keys-list.comp
 import { PluginsListComponent } from './plugins/plugins-list/plugins-list.component';
 import { ArMarkerListComponent } from './ar/ar-marker-list/ar-marker-list.component';
 import { ArViewComponent } from './ar/ar-view/ar-view.component';
+import { RecipeListComponent } from './recipes/recipe-list/recipe-list.component';
 
 const appRoutes: Routes = [
     { path: '', component: HomeComponent},//, canActivate: [AuthGuard] },
@@ -49,6 +50,7 @@ const appRoutes: Routes = [
     { path: 'plugins', component: PluginsListComponent, canActivate: [AuthGuard] },
     { path: 'arMarkers', component: ArMarkerListComponent, canActivate: [AuthGuard] },
     { path: 'ar', component: ArViewComponent },
+    { path: 'recipes', component: RecipeListComponent, canActivate: [AuthGuard] },
 
     // otherwise redirect to home
     { path: '**', redirectTo: '' }

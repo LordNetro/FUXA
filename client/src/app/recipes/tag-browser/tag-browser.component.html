@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>{{'recipes.tag-browser.title' | translate}}</h2>
+<mat-dialog-content class="tag-browser-content">
+    <div class="tag-browser-layout">
+        <!-- Device list -->
+        <div class="device-list">
+            <h4>{{'recipes.tag-browser.devices' | translate}}</h4>
+            <mat-selection-list [multiple]="false">
+                <mat-list-option *ngFor="let device of devices"
+                    [value]="device"
+                    (click)="onDeviceSelect(device)">
+                    {{device.name}}
+                </mat-list-option>
+            </mat-selection-list>
+        </div>
+
+        <!-- Tag list -->
+        <div class="tag-list" *ngIf="selectedDevice">
+            <h4>{{'recipes.tag-browser.tags' | translate}}: {{selectedDevice.name}}</h4>
+            <mat-form-field appearance="outline" class="tag-filter">
+                <mat-label>{{'recipes.tag-browser.filter' | translate}}</mat-label>
+                <input matInput [(ngModel)]="filterText" placeholder="Filter tags...">
+            </mat-form-field>
+            <mat-selection-list [multiple]="false">
+                <mat-list-option *ngFor="let tag of getFilteredTags()"
+                    [value]="tag"
+                    (click)="onTagSelect(tag)">
+                    {{tag.name}} ({{tag.type}})
+                </mat-list-option>
+            </mat-selection-list>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">{{'recipes.tag-browser.cancel' | translate}}</button>
+</mat-dialog-actions>

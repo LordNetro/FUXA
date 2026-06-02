@@ -1,0 +1,87 @@
+<h2 mat-dialog-title>{{data.newRecipe ? ('recipes.editor.new' | translate) : ('recipes.editor.edit' | translate)}}</h2>
+<mat-dialog-content class="recipe-editor-content">
+    <!-- Metadata section -->
+    <div class="editor-header">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{'recipes.name' | translate}}</mat-label>
+            <input matInput [(ngModel)]="name" required>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{'recipes.description' | translate}}</mat-label>
+            <textarea matInput [(ngModel)]="description" rows="2"></textarea>
+        </mat-form-field>
+    </div>
+
+    <!-- Entries section -->
+    <div class="editor-entries">
+        <div class="entries-header">
+            <h4>{{'recipes.editor.entries' | translate}}</h4>
+            <button mat-stroked-button color="primary" (click)="onAddEntry()">
+                <mat-icon>add</mat-icon>
+                {{'recipes.editor.add-entry' | translate}}
+            </button>
+        </div>
+
+        <table mat-table [dataSource]="dataSource" class="entries-table">
+            <!-- Tag ID Column -->
+            <ng-container matColumnDef="tagId">
+                <th mat-header-cell *matHeaderCellDef> {{'recipes.editor.tag-id' | translate}} </th>
+                <td mat-cell *matCellDef="let entry"> {{entry.tagId}} </td>
+            </ng-container>
+
+            <!-- Tag Name Column -->
+            <ng-container matColumnDef="tagName">
+                <th mat-header-cell *matHeaderCellDef> {{'recipes.editor.tag-name' | translate}} </th>
+                <td mat-cell *matCellDef="let entry"> {{entry.tagName}} </td>
+            </ng-container>
+
+            <!-- Tag Type Column -->
+            <ng-container matColumnDef="tagType">
+                <th mat-header-cell *matHeaderCellDef> {{'recipes.editor.tag-type' | translate}} </th>
+                <td mat-cell *matCellDef="let entry">
+                    <span class="tag-type-badge" [style.background-color]="getTagTypeColor(entry.tagType)">
+                        {{entry.tagType}}
+                    </span>
+                </td>
+            </ng-container>
+
+            <!-- Value Column -->
+            <ng-container matColumnDef="value">
+                <th mat-header-cell *matHeaderCellDef> {{'recipes.editor.value' | translate}} </th>
+                <td mat-cell *matCellDef="let entry">
+                    <!-- Boolean input -->
+                    <mat-slide-toggle *ngIf="entry.tagType?.toLowerCase() === 'boolean' || entry.tagType?.toLowerCase() === 'bool'"
+                        [(ngModel)]="entry.value">
+                    </mat-slide-toggle>
+                    <!-- Number input -->
+                    <input matInput type="number" *ngIf="isNumericType(entry.tagType)"
+                        [(ngModel)]="entry.value">
+                    <!-- String input -->
+                    <input matInput *ngIf="isStringType(entry.tagType)"
+                        [(ngModel)]="entry.value">
+                </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let entry">
+                    <button mat-icon-button color="warn" (click)="onRemoveEntry(entry)" title="{{'recipes.editor.remove' | translate}}">
+                        <mat-icon>remove_circle</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <div *ngIf="dataSource.data.length === 0" class="empty-entries">
+            {{'recipes.editor.no-entries' | translate}}
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">{{'recipes.editor.cancel' | translate}}</button>
+    <button mat-raised-button color="primary" (click)="onSave()">{{'recipes.editor.save' | translate}}</button>
+</mat-dialog-actions>

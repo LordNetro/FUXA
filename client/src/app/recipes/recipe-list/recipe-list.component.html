@@ -1,0 +1,75 @@
+<div class="recipe-list-container">
+    <div class="recipe-list-header">
+        <h2>{{'recipes.title' | translate}}</h2>
+        <button mat-fab color="primary" (click)="onAddRecipe()" title="{{'recipes.add' | translate}}">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+
+    <div class="recipe-list-actions">
+        <input #fileImportInput type="file" accept=".json,.csv" style="display:none" (change)="onImportRecipe($event)" />
+        <button mat-button (click)="fileImportInput.click()">
+            <mat-icon>file_upload</mat-icon>
+            {{'recipes.import' | translate}}
+        </button>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" matSort class="recipe-table">
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'recipes.name' | translate}} </th>
+            <td mat-cell *matCellDef="let row" class="recipe-name" (click)="onEditRecipe(row)"> {{row.name}} </td>
+        </ng-container>
+
+        <!-- Description Column -->
+        <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'recipes.description' | translate}} </th>
+            <td mat-cell *matCellDef="let row"> {{row.description}} </td>
+        </ng-container>
+
+        <!-- Entries Column -->
+        <ng-container matColumnDef="entries">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'recipes.entries' | translate}} </th>
+            <td mat-cell *matCellDef="let row"> {{row.entries}} tags </td>
+        </ng-container>
+
+        <!-- Updated At Column -->
+        <ng-container matColumnDef="updatedAt">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'recipes.updated-at' | translate}} </th>
+            <td mat-cell *matCellDef="let row"> {{row.updatedAt | date:'short'}} </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> {{'recipes.actions' | translate}} </th>
+            <td mat-cell *matCellDef="let row">
+                <button mat-icon-button (click)="onEditRecipe(row)" title="{{'recipes.edit' | translate}}">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="onDownloadRecipe(row)" title="{{'recipes.download' | translate}}">
+                    <mat-icon>arrow_downward</mat-icon>
+                </button>
+                <button mat-icon-button (click)="onUploadRecipe(row)" title="{{'recipes.upload' | translate}}">
+                    <mat-icon>arrow_upward</mat-icon>
+                </button>
+                <button mat-icon-button [matMenuTriggerFor]="exportMenu" title="{{'recipes.export' | translate}}">
+                    <mat-icon>get_app</mat-icon>
+                </button>
+                <mat-menu #exportMenu="matMenu">
+                    <button mat-menu-item (click)="onExportRecipe(row, 'json')">JSON</button>
+                    <button mat-menu-item (click)="onExportRecipe(row, 'csv')">CSV</button>
+                </mat-menu>
+                <button mat-icon-button (click)="onDeleteRecipe(row)" title="{{'recipes.delete' | translate}}">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <div *ngIf="dataSource.data.length === 0" class="empty-state">
+        {{'recipes.empty' | translate}}
+    </div>
+</div>

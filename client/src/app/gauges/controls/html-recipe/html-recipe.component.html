@@ -1,0 +1,114 @@
+<div class="recipe-widget" [style.backgroundColor]="backgroundColor" [style.color]="textColor" [style.borderColor]="borderColor" [style.border]="borderWidth + 'px solid ' + borderColor">
+    <!-- Loading state -->
+    <div *ngIf="loading" class="recipe-loading">
+        <mat-spinner diameter="24"></mat-spinner>
+        <span>{{'recipe.loading' | translate}}</span>
+    </div>
+
+    <!-- Error state -->
+    <div *ngIf="error && !loading" class="recipe-error">
+        <mat-icon class="error-icon">error_outline</mat-icon>
+        <span class="error-text">{{error}}</span>
+        <button mat-icon-button class="retry-btn" (click)="loadAllRecipes()" matTooltip="{{'recipe.retry' | translate}}">
+            <mat-icon>refresh</mat-icon>
+        </button>
+    </div>
+
+    <!-- Recipe content (has recipes) -->
+    <div *ngIf="!loading && !error && allRecipes.length > 0" class="recipe-content">
+        <!-- Recipe selector -->
+        <div class="recipe-selector-row">
+            <mat-form-field appearance="outline" class="recipe-select" [style.color]="textColor">
+                <mat-select [(ngModel)]="selectedRecipeId" (selectionChange)="onSelectRecipe()"
+                            [style.color]="textColor" placeholder="{{'recipe.select-recipe' | translate}}">
+                    <mat-option *ngFor="let r of allRecipes" [value]="r.id">
+                        {{r.data?.name || r.id}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <!-- Selected recipe header -->
+        <div class="recipe-header" *ngIf="selectedRecipe">
+            <h3 class="recipe-title">{{selectedRecipe.name}}</h3>
+            <p *ngIf="selectedRecipe.description" class="recipe-description">{{selectedRecipe.description}}</p>
+        </div>
+
+        <!-- Entries table (editable) -->
+        <div class="recipe-entries" *ngIf="entries.length > 0">
+            <div class="entries-header">
+                <span class="col-tag">{{'recipe.tag' | translate}}</span>
+                <span class="col-type">{{'recipe.type' | translate}}</span>
+                <span class="col-value">{{'recipe.value' | translate}}</span>
+            </div>
+            <div class="entries-body">
+                <div *ngFor="let entry of entries; let i = index" class="entry-row">
+                    <span class="col-tag" [matTooltip]="entry.tagId">{{entry.tagName}}</span>
+                    <span class="col-type">
+                        <span class="type-badge" [style.backgroundColor]="getTagTypeColor(entry.tagType)">{{entry.tagType}}</span>
+                    </span>
+                    <span class="col-value">
+                        <input *ngIf="!readonly" 
+                               class="value-input" 
+                               [(ngModel)]="entry.value" 
+                               [type]="isNumericType(entry.tagType) ? 'number' : (isStringType(entry.tagType) ? 'text' : 'text')"
+                               [style.borderColor]="accentColor" />
+                        <span *ngIf="readonly" class="value-text">{{entry.value !== null && entry.value !== undefined ? entry.value : '-'}}</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress -->
+        <div *ngIf="progress" class="recipe-progress">
+            <mat-progress-bar mode="indeterminate" [style.backgroundColor]="accentColor"></mat-progress-bar>
+            <span class="progress-text">{{'recipe.sending' | translate}}...</span>
+            <div *ngIf="progress.errors.length > 0" class="progress-errors">
+                <span *ngFor="let err of progress.errors" class="error-item">{{err}}</span>
+            </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div *ngIf="!readonly && selectedRecipe" class="recipe-actions">
+            <button mat-stroked-button class="action-btn" (click)="onNewRecipe()" [disabled]="saving || downloading || uploading || allRecipes.length === 0"
+                    [style.color]="accentColor" [style.borderColor]="accentColor">
+                <mat-icon>add</mat-icon>
+                {{'recipe.new' | translate}}
+            </button>
+            <button mat-stroked-button class="action-btn" (click)="onSave()" [disabled]="saving || downloading || uploading"
+                    [style.color]="accentColor" [style.borderColor]="accentColor">
+                <mat-icon>save</mat-icon>
+                {{saving ? ('recipe.saving' | translate) : ('recipe.save' | translate)}}
+            </button>
+            <button mat-stroked-button class="action-btn" (click)="onDownload()" [disabled]="saving || downloading || uploading"
+                    [style.color]="accentColor" [style.borderColor]="accentColor">
+                <mat-icon>arrow_downward</mat-icon>
+                {{downloading ? ('recipe.downloading' | translate) : ('recipe.download' | translate)}}
+            </button>
+            <button mat-stroked-button class="action-btn" (click)="onUpload()" [disabled]="saving || downloading || uploading"
+                    [style.color]="accentColor" [style.borderColor]="accentColor">
+                <mat-icon>arrow_upward</mat-icon>
+                {{uploading ? ('recipe.uploading' | translate) : ('recipe.upload' | translate)}}
+            </button>
+        </div>
+        <!-- Read-only actions (no Save, only Download/Upload) -->
+        <div *ngIf="readonly && selectedRecipe" class="recipe-actions">
+            <button mat-stroked-button class="action-btn" (click)="onDownload()" [disabled]="downloading"
+                    [style.color]="accentColor" [style.borderColor]="accentColor">
+                <mat-icon>arrow_downward</mat-icon>
+                {{downloading ? ('recipe.downloading' | translate) : ('recipe.download' | translate)}}
+            </button>
+            <button mat-stroked-button class="action-btn" (click)="onUpload()" [disabled]="uploading"
+                    [style.color]="accentColor" [style.borderColor]="accentColor">
+                <mat-icon>arrow_upward</mat-icon>
+                {{uploading ? ('recipe.uploading' | translate) : ('recipe.upload' | translate)}}
+            </button>
+        </div>
+    </div>
+
+    <!-- No recipes available -->
+    <div *ngIf="!loading && !error && allRecipes.length === 0" class="recipe-empty">
+        <mat-icon>menu_book</mat-icon>
+        <span>{{'recipe.no-recipes' | translate}}</span>
+    </div>
+</div>

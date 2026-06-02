@@ -1,0 +1,84 @@
+.recipe-editor-content {
+    min-width: 600px;
+    max-width: 900px;
+}
+
+.editor-header {
+    margin-bottom: 16px;
+}
+
+.editor-header h2 {
+    margin: 0;
+    color: var(--headerColor);
+}
+
+.full-width {
+    width: 100%;
+}
+
+.editor-entries {
+    margin-top: 16px;
+}
+
+.entries-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.entries-header h4 {
+    margin: 0;
+    color: var(--headerColor);
+}
+
+.entries-table {
+    width: 100%;
+}
+
+.entries-table th {
+    color: var(--headerColor);
+    opacity: 0.7;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: left;
+    padding: 4px 8px;
+}
+
+.entries-table td {
+    padding: 4px 8px;
+    color: var(--formInputColor);
+}
+
+.entry-row {
+    border-bottom: 1px solid var(--formSeparatorColor);
+}
+
+.tag-type-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.tag-value-input {
+    width: 100%;
+    padding: 4px 6px;
+    background-color: var(--formInputBackground);
+    color: var(--formInputColor);
+    border: 1px solid var(--formBorder);
+    border-radius: 2px;
+}
+
+.empty-entries {
+    text-align: center;
+    padding: 24px;
+    color: var(--headerColor);
+    opacity: 0.5;
+}
+
+mat-dialog-actions {
+    padding-bottom: 16px;
+}

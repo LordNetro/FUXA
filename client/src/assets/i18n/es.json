@@ -731,6 +731,7 @@
     "dlg.setup-plugins": "Plugins",
     "dlg.setup-scripts": "Codigos",
     "dlg.setup-settings": "Configuración",
+    "dlg.setup-recipes": "Recetas",
     "dlg.app-settings-title": "Configuración",
     "dlg.app-settings-system": "Sistema",
     "dlg.app-settings-language": "Languaje",
@@ -789,7 +790,24 @@
     "msg.signin-failed": "Desautorizado",
     "msg.get-project-void": "Proyecto no encontrado!",
     "msg.editor-mode-locked": "El editor ya esta abierto!",
-    "msg.alarms-clear-success": "Todas las alarmas han sido canceladas!"
+    "msg.alarms-clear-success": "Todas las alarmas han sido canceladas!",
+    "editor.controls-recipe": "Receta",
+    "editor.controls-recipe-settings": "Configuraci\u00f3n de receta",
+    "recipe.loading": "Cargando",
+    "recipe.retry": "Reintentar",
+    "recipe.select-recipe": "Seleccionar receta",
+    "recipe.tag": "Etiqueta",
+    "recipe.type": "Tipo",
+    "recipe.value": "Valor",
+    "recipe.sending": "Enviando",
+    "recipe.new": "Nueva",
+    "recipe.save": "Guardar",
+    "recipe.saving": "Guardando",
+    "recipe.download": "Descargar",
+    "recipe.downloading": "Descargando",
+    "recipe.upload": "Subir",
+    "recipe.uploading": "Subiendo",
+    "recipe.no-recipes": "No hay recetas disponibles"
   }
 
 

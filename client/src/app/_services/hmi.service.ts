@@ -14,6 +14,7 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { AuthService, UserProfile } from './auth.service';
 import { DeviceAdapterService } from '../device-adapter/device-adapter.service';
 import { HttpClient } from '@angular/common/http';
+import { RecipeProgressEvent, RecipeCompleteEvent } from '../_models/recipe';
 
 @Injectable()
 export class HmiService {
@@ -35,6 +36,12 @@ export class HmiService {
     @Output() onSchedulerEventActive: EventEmitter<any> = new EventEmitter();
     @Output() onSchedulerRemainingTime: EventEmitter<any> = new EventEmitter();
     @Output() onGaugeEvent: EventEmitter<any> = new EventEmitter();
+    @Output() onRecipeDownloadProgress: EventEmitter<RecipeProgressEvent> = new EventEmitter();
+    @Output() onRecipeUploadProgress: EventEmitter<RecipeProgressEvent> = new EventEmitter();
+    @Output() onRecipeDownloadComplete: EventEmitter<RecipeCompleteEvent> = new EventEmitter();
+    @Output() onRecipeUploadComplete: EventEmitter<RecipeCompleteEvent> = new EventEmitter();
+    @Output() onRecipeDownloadError: EventEmitter<any> = new EventEmitter();
+    @Output() onRecipeUploadError: EventEmitter<any> = new EventEmitter();
 
     onServerConnection$ = new BehaviorSubject<boolean>(false);
 
@@ -313,6 +320,26 @@ export class HmiService {
         });
         this.socket.on(IoEventTypes.SCRIPT_COMMAND, (message) => {
             this.onScriptCommand(message);
+        });
+        // recipe download progress
+        this.socket.on(IoEventTypes.RECIPE_DOWNLOAD_PROGRESS, (message) => {
+            this.onRecipeDownloadProgress.emit(message);
+        });
+        this.socket.on(IoEventTypes.RECIPE_DOWNLOAD_COMPLETE, (message) => {
+            this.onRecipeDownloadComplete.emit(message);
+        });
+        this.socket.on(IoEventTypes.RECIPE_DOWNLOAD_ERROR, (message) => {
+            this.onRecipeDownloadError.emit(message);
+        });
+        // recipe upload progress
+        this.socket.on(IoEventTypes.RECIPE_UPLOAD_PROGRESS, (message) => {
+            this.onRecipeUploadProgress.emit(message);
+        });
+        this.socket.on(IoEventTypes.RECIPE_UPLOAD_COMPLETE, (message) => {
+            this.onRecipeUploadComplete.emit(message);
+        });
+        this.socket.on(IoEventTypes.RECIPE_UPLOAD_ERROR, (message) => {
+            this.onRecipeUploadError.emit(message);
         });
         this.socket.on(IoEventTypes.ALIVE, (message) => {
             this.onServerConnection$.next(true);
@@ -650,6 +677,14 @@ export class HmiService {
     }
     //#endregion
 
+    //#region Recipe functions
+    cancelRecipeExecution(recipeId: string) {
+        if (this.socket) {
+            this.socket.emit('recipe:cancel-execution', { recipeId });
+        }
+    }
+    //#endregion
+
     //#region My Static functions
     public static toVariableId(src: string, name: string) {
         return src + HmiService.separator + name;
@@ -755,7 +790,13 @@ export enum IoEventTypes {
     ALIVE = 'heartbeat',
     SCHEDULER_UPDATED = 'scheduler:updated',
     SCHEDULER_ACTIVE = 'scheduler:event-active',
-    SCHEDULER_REMAINING = 'scheduler:remaining-time'
+    SCHEDULER_REMAINING = 'scheduler:remaining-time',
+    RECIPE_DOWNLOAD_PROGRESS = 'recipe:download-progress',
+    RECIPE_DOWNLOAD_COMPLETE = 'recipe:download-complete',
+    RECIPE_DOWNLOAD_ERROR = 'recipe:download-error',
+    RECIPE_UPLOAD_PROGRESS = 'recipe:upload-progress',
+    RECIPE_UPLOAD_COMPLETE = 'recipe:upload-complete',
+    RECIPE_UPLOAD_ERROR = 'recipe:upload-error',
 }
 
 export const ScriptCommandEnum = {
